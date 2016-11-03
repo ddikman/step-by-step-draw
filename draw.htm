@@ -1,0 +1,193 @@
+<html>
+  <header>
+    <title>Price draw</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <style type="text/css">
+      .flip-container {
+        margin: 0px;
+        padding: 0px 0px;
+        float: left;
+        font-family: "Open Sans", Arial, sans-serif;
+        width: 120px;
+        height: 120px;
+      }
+
+      /* hide back of pane during swap */
+      .front, .back {
+        backface-visibility: hidden;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .flip-container
+      {
+          margin: 5px;
+      }
+
+      .flip-container, .front, .back {
+        width: 100px;
+        height: 40px;
+      }
+
+      .text {
+        position: relative;
+        top: 34%;
+        transform: translateY(-50%);
+      }
+
+      .back {
+        border: 3px solid #cccccc;
+        background-color: #ffffff;
+        color: #cccccc;
+        border-width: 1px;
+        font-size: 12px;
+        width: 80px;
+        height: 30px;
+      }
+
+      .front {
+        border: 3px solid #1ACA94;
+        background-color: #1ACA94;
+        color: white;
+      }
+
+      /* entire container, keeps perspective */
+      .flip-container {
+      	perspective: 1000px;
+      }
+
+      	.flip-container:hover .flipper, .flip-container.hover .flipper {
+      		transform: rotateY(180deg);
+      	}
+
+      /* flip speed goes here */
+      .flipper {
+      	transition: 0.6s;
+      	transform-style: preserve-3d;
+
+      	position: relative;
+      }
+
+      /* front pane, placed above back */
+      .front {
+      	z-index: 2;
+      	/* for firefox 31 */
+      	transform: rotateY(0deg);
+      }
+
+      /* back, initially hidden pane */
+      .back {
+      	transform: rotateY(180deg);
+      }
+    </style>
+    <script type="text/javascript">
+      var data = [11111, 12345, 12345, 21323, 21321, 23123, 23123, 23132, 23123];
+      data = data.sort();
+      console.log('got ' + data.length + ' items to begin with');
+
+      function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+          // Pick a remaining element...
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+
+          // And swap it with the current element.
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+      }
+    </script>
+  </header>
+  <body>
+    <div id="container" style="text-align: center;">
+      <table id="table">
+      </table>
+    </div>
+    <script type="text/javascript">
+
+      var index = 0;
+      var root = Math.ceil(Math.sqrt(data.length));
+      var width = ($(window).width() / root) - 20;
+      var height = ($(window).height() / root) - 18;
+      console.log('drawing ' + data.length + ' items');
+      for(r = 0; r < root; ++r)
+      {
+        row = $('<tr/>');
+        for(c = 0; c < root; ++c)
+        {
+          if(index >= data.length)
+            break;
+
+          console.log('drawing item ' + index);
+          attendeeNumber = data[index++];
+
+          flipContainer = $('<div/>');
+          flipContainer.addClass('flip-container');
+          flipContainer.attr('id', 'item-' + parseInt(attendeeNumber));
+          flipContainer.css({'width': width + 'px', 'height': height + 'px'})
+
+          flipper = $('<div/>');
+          flipper.addClass('flipper');
+          flipContainer.append(flipper);
+
+          front = $('<div><span class="text">' + attendeeNumber + '</span></div>');
+          front.addClass('front');
+          front.css({'width': width + 'px', 'height': height + 'px'})
+          flipper.append(front);
+
+          back = $('<div><span class="text">' + attendeeNumber + '</span></div>');
+          back.addClass('back');
+          back.css({'width': width + 'px', 'height': height + 'px'})
+          flipper.append(back);
+
+          var column = $('<td/>');
+          column.append(flipContainer);
+          row.append(column);
+        }
+        $('#table').append(row);
+      }
+
+      data = shuffle(data);
+      console.log('reshuffle stuff')
+
+      drawStep = 7;
+      draws = [1, 2, 3, 5, 10, 20, 30];
+      drawSpeed = [1000, 2500, 2500, 1500, 300, 200, 10];
+      //drawSpeed = [1, 1,1, 1,1,1,1,1,1,1]
+
+      function remove() {
+        var item = Math.floor(Math.random()*data.length);
+        console.log('removing ' + data[item] + '>' + item + ' of ' + data.length + ' items.');
+        $('#item-' + data[item]).addClass('hover');
+        data.splice(item, 1);
+
+        if(data.length > draws[drawStep])
+          setTimeout(function(){ remove() }, drawSpeed[drawStep]);
+        if(data.length == 1)
+          $('#item-' + data[0] + " .front").animate({'background-color': '#a8a8ff', 'border-color': '#a8a8ff'}, 1500);
+      };
+
+      $(document).keydown(function(){
+        drawStep--;
+        setTimeout(function(){ remove()}, drawSpeed[drawStep]);
+      });
+
+    </script>
+  </body>
+</html>
