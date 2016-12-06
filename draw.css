@@ -1,0 +1,83 @@
+.flip-container {
+  margin: 0px;
+  padding: 0px 0px;
+  float: left;
+  font-family: "Open Sans", Arial, sans-serif;
+  width: 120px;
+  height: 120px;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+  backface-visibility: hidden;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.flip-container
+{
+    margin: 5px;
+}
+
+.flip-container, .front, .back {
+  width: 100px;
+  height: 40px;
+}
+
+.text {
+  position: relative;
+  top: 34%;
+  transform: translateY(-50%);
+}
+
+.back {
+  border: 3px solid #cccccc;
+  background-color: #ffffff;
+  color: #cccccc;
+  border-width: 1px;
+  font-size: 12px;
+  width: 80px;
+  height: 30px;
+}
+
+.front {
+  border: 3px solid #1ACA94;
+  background-color: #1ACA94;
+  color: white;
+}
+
+/* entire container, keeps perspective */
+.flip-container {
+  perspective: 1000px;
+}
+
+  .flip-container:hover .flipper, .flip-container.hover .flipper {
+    transform: rotateY(180deg);
+  }
+
+/* flip speed goes here */
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+
+  position: relative;
+}
+
+/* front pane, placed above back */
+.front {
+  z-index: 2;
+  /* for firefox 31 */
+  transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+  transform: rotateY(180deg);
+}
