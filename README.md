@@ -7,7 +7,7 @@ It was written for Infuse Consulting Ltd. to enable us to draw a winner on confe
 
 ## how to
 
-1. Download the zip file under releases
+1. Download the zip file under [releases](https://github.com/ddikman/step-by-step-draw/releases)
 2. Unzip it locally
 3. Edit the `names.txt`, inputting your entries
 4. Open `draw.htm`
